@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 namespace DiscordBot
 {
     //Docs: https://dsharpplus.github.io/articles/preamble.html
-    class Program
+    public class Program
     {
+        public static BaseConfig Config;
         private const string CONFIG_FOLDER = "\\config";
 
         private static void Main(string[] args)
@@ -29,12 +30,19 @@ namespace DiscordBot
             {
                 var configFile = File.ReadAllText(currentPath + CONFIG_FOLDER + "\\config.json");
                 config = JsonConvert.DeserializeObject<BaseConfig>(configFile);
+
+                // HACK: Used to update the config file, if there are new items added
+                if(config != null)
+                {
+                    var configText = JsonConvert.SerializeObject(config, Formatting.Indented);
+                    File.WriteAllText(currentPath + CONFIG_FOLDER + "\\config.json", configText);
+                }
             }
             else
             {
                 Console.WriteLine("no config.json found, creating file");
                 var emptyConfig = new BaseConfig();
-                var configText = JsonConvert.SerializeObject(emptyConfig);
+                var configText = JsonConvert.SerializeObject(emptyConfig, Formatting.Indented);
                 Directory.CreateDirectory(currentPath + CONFIG_FOLDER);
                 File.WriteAllText(currentPath + CONFIG_FOLDER + "\\config.json", configText);
                 Console.WriteLine("File has been created, please fill out the information, and start the bot again");
@@ -46,6 +54,8 @@ namespace DiscordBot
                 Console.WriteLine("Config could not be loaded");
                 return;
             }
+
+            Config = config;
 
             var client = new DiscordClient(new DiscordConfiguration()
             {

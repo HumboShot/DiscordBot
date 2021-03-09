@@ -64,10 +64,5 @@ namespace DiscordBot
             await client.ConnectAsync();
             await Task.Delay(-1);
         }
-
-        private static void RegisterCommands(CommandsNextExtension commands)
-        {
-            commands.RegisterCommands<TextModule>();
-        }
     }
 }

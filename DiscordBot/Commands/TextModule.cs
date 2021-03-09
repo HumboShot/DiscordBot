@@ -33,5 +33,11 @@ namespace DiscordBot.Commands
             var random = new Random();
             await ctx.RespondAsync($"Your number is: {random.Next(min, max)}");
         }
+
+        [Command("ping")]
+        public async Task PongCommand(CommandContext ctx)
+        {
+            await ctx.RespondAsync("Pong!");
+        }
     }
 }
